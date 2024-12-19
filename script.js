@@ -1,4 +1,3 @@
-// Symbole und deren Werte
 const SYMBOLS = ["🍒", "🍋", "🍊", "🍇", "🍉", "⭐", "7"];
 const PAYOUTS = {
     "7": 100,
@@ -10,7 +9,6 @@ const PAYOUTS = {
     "🍒": 5
 };
 
-// Spielstatus
 let balance = 1000;
 
 const reels = [
@@ -25,7 +23,6 @@ const spinButton = document.getElementById("spin-button");
 const balanceDisplay = document.getElementById("balance");
 const messageDisplay = document.getElementById("message");
 
-// Spin-Funktion
 function spinReels() {
     if (balance < 10) {
         messageDisplay.textContent = "Nicht genug Guthaben!";
@@ -36,17 +33,24 @@ function spinReels() {
     balanceDisplay.textContent = `Guthaben: ${balance}`;
     messageDisplay.textContent = "Drehen...";
 
-    const results = [];
+    // Animation starten
     reels.forEach((reel, index) => {
-        const randomSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-        reel.textContent = randomSymbol;
-        results.push(randomSymbol);
+        reel.innerHTML = `<span>${SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]}</span>`;
+        reel.querySelector("span").style.animation = "spin 1s ease-in-out";
     });
 
-    calculateWin(results);
+    // Nach 1 Sekunde Ergebnis anzeigen
+    setTimeout(() => {
+        const results = [];
+        reels.forEach((reel) => {
+            const randomSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+            reel.textContent = randomSymbol;
+            results.push(randomSymbol);
+        });
+        calculateWin(results);
+    }, 1000);
 }
 
-// Gewinnberechnung
 function calculateWin(results) {
     const counts = {};
     results.forEach(symbol => {
@@ -56,7 +60,6 @@ function calculateWin(results) {
     let win = 0;
     let message = "";
 
-    // Prüfen auf Gewinne
     for (const symbol in counts) {
         if (symbol === "7" && counts[symbol] === 5) {
             win += 1000; // Jackpot
@@ -77,5 +80,4 @@ function calculateWin(results) {
     }
 }
 
-// Event Listener für den Spin-Button
 spinButton.addEventListener("click", spinReels);
